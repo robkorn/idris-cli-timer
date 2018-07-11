@@ -1,1 +1,1 @@
-play sounds/tone.wav
+play sounds/church-bell.wav && clear

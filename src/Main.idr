@@ -11,15 +11,22 @@ countDown n = do putStrLn $ show n
               where secondDelay : IO ()
                     secondDelay = usleep 1000000
 
-getCountdownNum : IO (Int)
-getCountdownNum = do inp <- getLine
-                     case inp of
-                          "0" => putStrLn "Please input a number greater than zero." >>= \ _ => getCountdownNum
-                          _ => case castToInt inp of
-                                    0 => putStrLn "Please input a number." >>= \ _ => getCountdownNum
-                                    i => pure i
-                  where castToInt : (inp : String) -> Int
-                        castToInt inp = cast inp
+getCountdownNumIO : IO (Int)
+getCountdownNumIO = do putStr "Enter how many seconds you want to set the timer for: "
+                       inp <- getLine
+                       case inp of
+                             "0" => putStrLn "Please input a number greater than zero." >>= \ _ => getCountdownNumIO
+                             _ => case castToInt inp of
+                                       0 => putStrLn "Please input a number." >>= \ _ => getCountdownNumIO
+                                       i => pure i
+                     where castToInt : (inp : String) -> Int
+                           castToInt inp = cast inp
+
+
+getCountdownNum : (args : List (String)) -> IO Int
+getCountdownNum args = case Prelude.List.index' 1 args of
+                            Nothing => getCountdownNumIO
+                            Just n => if cast n == 0 then getCountdownNumIO else pure $ cast n
 
 getCommandFromFile : IO (String)
 getCommandFromFile = do Right cmd <- readFile "command.sh" | Left er => pure ""
@@ -27,11 +34,11 @@ getCommandFromFile = do Right cmd <- readFile "command.sh" | Left er => pure ""
 
 main : IO ()
 main = do
-       cmd <- getCommandFromFile
+       args <- getArgs
        putStrLn "Welcome to your favorite cli countdown timer!"
-       putStr "Enter how many seconds you want to set the timer for: "
-       cdNum <- getCountdownNum
+       cdNum <- getCountdownNum args
        putStrLn "---\n"
        countDown cdNum
+       cmd <- getCommandFromFile
        system cmd
        pure ()
