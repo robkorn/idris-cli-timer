@@ -1,2 +1,2 @@
-idris Main.idr -o exec/cliTimer
+idris src/Main.idr -o exec/cliTimer
 ./exec/cliTimer
