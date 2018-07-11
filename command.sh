@@ -1,1 +1,1 @@
-ls
+play sounds/tone.wav

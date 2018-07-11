@@ -11,8 +11,6 @@ countDown n = do putStrLn $ show n
               where secondDelay : IO ()
                     secondDelay = usleep 1000000
 
-
-
 getCountdownNum : IO (Int)
 getCountdownNum = do inp <- getLine
                      case inp of
