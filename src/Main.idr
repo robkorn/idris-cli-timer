@@ -16,12 +16,9 @@ getCountdownNumIO = do putStr "Enter how many seconds you want to set the timer 
                        inp <- getLine
                        case inp of
                              "0" => putStrLn "Please input a number greater than zero." >>= \ _ => getCountdownNumIO
-                             _ => case castToInt inp of
+                             _ => case (the Int (cast inp)) of
                                        0 => putStrLn "Please input a number." >>= \ _ => getCountdownNumIO
                                        i => pure i
-                     where castToInt : (inp : String) -> Int
-                           castToInt inp = cast inp
-
 
 getCountdownNum : (args : List (String)) -> IO Int
 getCountdownNum args = case Prelude.List.index' 1 args of
